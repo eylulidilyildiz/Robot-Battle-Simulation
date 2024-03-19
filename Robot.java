@@ -1,3 +1,4 @@
+
 /**
  * Robot
  */
@@ -15,7 +16,7 @@ public abstract class Robot
      * Different robots prefer different targets, 
      * and subclasses of Robot will override this method based on their specifications.
      */
-    public abstract void attack();
+    public abstract void attack(Simulation s);
 
 
     /**
@@ -53,4 +54,17 @@ public abstract class Robot
     {
         this.name = s;
     }
+
+    public void setTeam(String team)
+    {
+        if(team.equals("red"))
+        {
+            this.isRedTeam = true;
+        }
+        else if(team.equals("blue"))
+        {
+            this.isRedTeam = false;
+        }
+    }
+
 }

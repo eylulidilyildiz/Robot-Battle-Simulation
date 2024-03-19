@@ -18,7 +18,7 @@ public class SpeedBot extends Robot
 
     }
 
-    public void attack()
+    public void attack(Simulation s)
     {
 
     }

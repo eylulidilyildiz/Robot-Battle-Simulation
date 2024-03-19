@@ -20,7 +20,7 @@ public class DefenceBot extends Robot
         this.speed = random.nextDouble(MIN_SPEED, MAX_SPEED);
     }
 
-    public void attack()
+    public void attack(Simulation s)
     {
 
     }

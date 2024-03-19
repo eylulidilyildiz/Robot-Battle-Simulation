@@ -18,7 +18,7 @@ public class PredatorBot extends Robot
 
     }
 
-    public void attack()
+    public void attack( Simulation s)
     {
 
     }
