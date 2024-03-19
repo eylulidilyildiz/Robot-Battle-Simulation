@@ -20,19 +20,14 @@ public class PredatorBot extends Robot
 
     public void attack(Simulation s)
     {
-        Robot target;
-        if(this.isRedTeam) //if this PredatorBot is red
-        {
-            target = s.getHighestHealth(!isRedTeam); //chooses target from blue team
-        }
-        else{
-            target = s.getHighestHealth(isRedTeam);
-        }
-
-
+        // PredatorBot: Attacks the opposite team's robot with the highest health
+        Robot target = s.getHighestHealth(!isRedTeam);
+        
+        System.out.println(this.name + " attacks " + target.getName());
         boolean isTargetDestroyed = target.getHitAndIsDestroyed(this.attack);
         if(isTargetDestroyed)
         {
+            System.out.println(target.getName() + " destroyed.");
             s.removeRobot(target);
         }
     }

@@ -20,6 +20,16 @@ public class SpeedBot extends Robot
 
     public void attack(Simulation s)
     {
+        //SpeedBot: Attacks the opposite team's robot with the lowest attack.
+        Robot target = s.getLowestAttack(!isRedTeam); 
+
+        System.out.println(this.name + " attacks " + target.getName());
+        boolean isTargetDestroyed = target.getHitAndIsDestroyed(this.attack);
+        if(isTargetDestroyed)
+        {
+            System.out.println(target.getName() + " destroyed.");
+            s.removeRobot(target);
+        }
 
     }
 

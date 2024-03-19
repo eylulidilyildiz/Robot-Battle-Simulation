@@ -173,17 +173,17 @@ public class Simulation
         {
             startingTeam = this.blue;
             otherTeam = this.red;
-            System.out.println("\n\nBlue starts first.");
+            System.out.println("\n\nBlue starts first.\n");
         }
         else{  //if (sumOfBlue <= sumOfRed)
             startingTeam = this.red; 
             otherTeam = this.blue;
-            System.out.println("\nRed starts first.");
+            System.out.println("\n\nRed starts first.\n");
         }
         
         
 
-        /*TODO
+        /*
          * The robots of each team take turns to perform their attack.
          * Robots can be destroyed when attacked by the opposite team’s robots. 
          * If a robot at a specific index is destroyed, remove it from the array 
@@ -195,21 +195,37 @@ public class Simulation
         int indexOfOtherTeam = 0;
         while(!isSimulationFinished())
         {
-            if(indexOfStartingTeam >= startingTeam.length)
+            if(indexOfStartingTeam >= startingTeam.length || indexOfStartingTeam < 0)
             {
                 indexOfStartingTeam = 0;
             }
+
+            int previousLengthOfOther = otherTeam.length;
+
             startingTeam[indexOfStartingTeam].attack(this);
-            indexOfStartingTeam ++;
+            indexOfStartingTeam ++; 
+            if(otherTeam.length == previousLengthOfOther)
+            {
+                indexOfOtherTeam --;
+            }
+
 
             if(!isSimulationFinished())
             {
-                if(indexOfOtherTeam >= otherTeam.length)
+                if(indexOfOtherTeam >= otherTeam.length || indexOfOtherTeam < 0)
                 {
                     indexOfOtherTeam = 0;
                 }
+
+                int previousLengthOfStarting = startingTeam.length;
+                
                 otherTeam[indexOfOtherTeam].attack(this);
-                indexOfOtherTeam ++;
+                indexOfOtherTeam ++; 
+                if(startingTeam.length == previousLengthOfStarting)
+                {
+                    indexOfStartingTeam --; 
+                }
+                
             }
         }
 
@@ -347,6 +363,7 @@ public class Simulation
      */
     public Robot getLowestSpeed(boolean isRedTeam)
     {
+
         Robot robotWithLowestSpeed;
         if(isRedTeam) //is true
         {
@@ -426,26 +443,31 @@ public class Simulation
             chosenTeam.add(robot);
         }
 
-        Robot [] lowestThreeRobots = new Robot[3];
+        ArrayList<Robot> lowestSpeedRobots = new ArrayList<Robot>();
 
         Robot robotWithLowestSpeed1 = getLowestSpeed(chosenTeam);
-        lowestThreeRobots[0] = robotWithLowestSpeed1;
+        lowestSpeedRobots.add(robotWithLowestSpeed1);
         chosenTeam.remove(robotWithLowestSpeed1);
    
         if(chosenTeam.size() > 0)
         {
             Robot robotWithLowestSpeed2 = getLowestSpeed(chosenTeam);
-            lowestThreeRobots[1] = robotWithLowestSpeed2;
+            lowestSpeedRobots.add(robotWithLowestSpeed2);
             chosenTeam.remove(robotWithLowestSpeed2);
         }
         if(chosenTeam.size() > 0)
         {
             Robot robotWithLowestSpeed3 = getLowestSpeed(chosenTeam);
-            lowestThreeRobots[2] = robotWithLowestSpeed3;
+            lowestSpeedRobots.add(robotWithLowestSpeed3);
             chosenTeam.remove(robotWithLowestSpeed3);
         }
 
-        return lowestThreeRobots;
+        Robot [] lowestSpeed = new Robot[lowestSpeedRobots.size()];
+        for(int i = 0; i < lowestSpeedRobots.size(); i++)
+        {
+            lowestSpeed[i] = lowestSpeedRobots.get(i);
+        }
+        return lowestSpeed;
     }
 
 
@@ -457,14 +479,15 @@ public class Simulation
             {
                 if(r.getName().equals(red[i].getName()))
                 {
+                    red[i] = null;
                     for(int j = i; j < red.length -1; j++)
                     {
                         red[j] = red[j+1];                    
                     }
+                    break;
                 }
-
-                red = Arrays.copyOf(red, red.length -1);
             }
+            red = Arrays.copyOf(red, red.length -1);
         }
         else{
             for(int i = 0; i < blue.length; i++)
@@ -475,10 +498,12 @@ public class Simulation
                     {
                         blue[j] = blue[j+1];                    
                     }
+                    blue[blue.length-1] = null;
+                    break;
                 }
 
-                blue = Arrays.copyOf(blue, blue.length -1);
             }
+            blue = Arrays.copyOf(blue, blue.length -1);
 
         }
 

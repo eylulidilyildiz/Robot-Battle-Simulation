@@ -20,7 +20,16 @@ public class OneBot extends Robot
 
     public void attack(Simulation s)
     {
+        // OneBot: Attacks the opposite team's robot with the lowest health.
+        Robot target = s.getLowestHealth(!isRedTeam); 
 
+        System.out.println(this.name + " attacks " + target.getName());
+        boolean isTargetDestroyed = target.getHitAndIsDestroyed(this.attack);
+        if(isTargetDestroyed)
+        {
+            System.out.println(target.getName() + " destroyed.");
+            s.removeRobot(target);
+        }
     }
 
 

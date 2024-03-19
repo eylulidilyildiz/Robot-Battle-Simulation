@@ -20,6 +20,25 @@ public class SpreadBot extends Robot
 
     public void attack(Simulation s)
     {
+        Robot [] targets = s.getLowestSpeed3(!isRedTeam);
+        
+        System.out.println(this.name + " attacks following targets:");
+        for(Robot target : targets)
+        {
+            System.out.print(target.getName() + " ");
+        }
+        System.out.println("");
+
+        //Attacking these targets
+        for(Robot target: targets)
+        {
+            boolean isTargetDestroyed = target.getHitAndIsDestroyed(this.attack);
+            if(isTargetDestroyed)
+            {
+                System.out.println(target.getName() + " destroyed.");
+                s.removeRobot(target);
+            }
+        }
 
     }
 

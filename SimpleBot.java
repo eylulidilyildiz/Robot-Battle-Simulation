@@ -20,25 +20,15 @@ public class SimpleBot extends Robot
     public void attack(Simulation s)
     {
         //SimpleBot: Attacks a random robot on the opposite team
-        Robot target;
-        if(this.isRedTeam)
-        {
-            target = s.getRandomTarget(!isRedTeam); //chooses randomly from the blue team
-        }
-        else //if our SimpleBot is of the blue team
-        {
-            target = s.getRandomTarget(isRedTeam); //chooses randomly from the red team
-        }
-
+        Robot target = s.getRandomTarget(!isRedTeam);
+  
         System.out.println(this.name + " attacks " + target.getName());
         boolean isTargetDestroyed = target.getHitAndIsDestroyed(this.attack);
         if(isTargetDestroyed)
         {
             System.out.println(target.getName() + " destroyed.");
             s.removeRobot(target);
-
         }
-
     }
 
     public boolean getHitAndIsDestroyed(double damage)

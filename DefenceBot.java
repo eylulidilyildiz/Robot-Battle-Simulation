@@ -22,7 +22,16 @@ public class DefenceBot extends Robot
 
     public void attack(Simulation s)
     {
+        // DefenceBot: Attacks the opposite team's robot with the lowest speed.
+        Robot target = s.getLowestSpeed(!isRedTeam);
 
+        System.out.println(this.name + " attacks " + target.getName());
+        boolean isTargetDestroyed = target.getHitAndIsDestroyed(this.attack);
+        if(isTargetDestroyed)
+        {
+            System.out.println(target.getName() + " destroyed.");
+            s.removeRobot(target);
+        }
     }
 
 
