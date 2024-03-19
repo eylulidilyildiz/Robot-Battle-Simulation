@@ -8,6 +8,9 @@ public class Simulation
     private Robot [] blue;
     private int numberOfRobots;
 
+    private int indexOfStartingTeam = 0;
+    private int indexOfOtherTeam = 0;
+
     private final int TYPES_OF_ROBOTS = 6;
 
     public Simulation(int teamSize)
@@ -529,6 +532,32 @@ public class Simulation
             }
         }
         return robotWithLowestSpeed;
+    }
+
+
+    public int findIndexOfTarget(Robot target)
+    {
+        int index = 0;
+        if(target.isRedTeam())
+        {
+            for(int i = 0; i < red.length; i++)
+            {
+                if(target.getName().equals(red[i].getName()))
+                {
+                    index = i;
+                }
+            }
+        }
+        else{
+            for(int i = 0; i < blue.length; i++)
+            {
+                if(target.getName().equals(blue[i].getName()))
+                {
+                    index = i;
+                }
+            }
+        }
+        return index;
     }
 
 
