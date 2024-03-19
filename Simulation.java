@@ -142,7 +142,7 @@ public class Simulation
          * Deetermines which team starts first. 
          * To this end, calculates the sum of the speed values of the robots of each team; 
          * the team whose speed sum is higher starts first.
-         * t. If the speed sums are the same, the red team starts first. 
+         * If the speed sums are the same, the red team starts first. 
          */
         double sumOfRed = 0;
         double sumOfBlue = 0;
@@ -162,7 +162,7 @@ public class Simulation
         }
         
 
-        /*
+        /*TODO
          * The robots of each team take turns to perform their attack.
          * Robots can be destroyed when attacked by the opposite team’s robots. 
          * If a robot at a specific index is destroyed, remove it from the array 
@@ -374,11 +374,37 @@ public class Simulation
             {
                 if(r.getName().equals(red[i].getName()))
                 {
-                    //SHIFT AND REMOVE
+                    for(int j = i; j < red.length -1; j++)
+                    {
+                        red[j] = red[j+1];                    
+                    }
                 }
+
+                red = Arrays.copyOf(red, red.length -1);
             }
         }
+        else{
+            for(int i = 0; i < blue.length; i++)
+            {
+                if(r.getName().equals(blue[i].getName()))
+                {
+                    for(int j = i; j < blue.length -1; j++)
+                    {
+                        blue[j] = blue[j+1];                    
+                    }
+                }
 
+                blue = Arrays.copyOf(blue, blue.length -1);
+            }
+
+        }
+
+    }
+
+    //The simulation continues until one of the teams has all of its robots destroyed. 
+    public boolean isSimulationFinished()
+    {
+        return (red.length == 0 || blue.length == 0);
     }
 
     //helper
