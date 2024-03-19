@@ -6,6 +6,9 @@ public class Simulation
 {
     private Robot [] red;
     private Robot [] blue;
+    private static int numberOfRobots = 0;
+
+    private final int TYPES_OF_ROBOTS = 6;
 
     /**
      * 
@@ -17,11 +20,118 @@ public class Simulation
         this.blue = new Robot[teamSize];
 
         //create different robots randomly
+        Random random = new Random();
+        for (int i = 0; i < teamSize; i++)
+        {
+            Robot chosenRobot;
+            String code = "";
+            int chosenType = random.nextInt(0,TYPES_OF_ROBOTS);
+            if(chosenType == 0)
+            {
+                code += "S" + numberOfRobots;
+                chosenRobot = new SimpleBot();
+            }
+            else if(chosenType == 1)
+            {
+                code += "P" + numberOfRobots;
+                chosenRobot = new PredatorBot();
+            }
+            else if(chosenType == 2)
+            {
+                code += "D" + numberOfRobots;
+                chosenRobot = new DefenceBot();
+            }
+            else if(chosenType == 3)
+            {
+                code += "X" + numberOfRobots;
+                chosenRobot = new SpeedBot();
+            }
+            else if(chosenType == 4)
+            {
+                code += "K" + numberOfRobots;
+                chosenRobot = new SpreadBot();
+            }
+            else //chosenType == 5
+            {
+                code += "O" + numberOfRobots;
+                chosenRobot = new OneBot();
+            }
 
+            chosenRobot.setName(code);
+            numberOfRobots ++;
+            red[i] = chosenRobot;
+        }
+
+
+        for (int i = 0; i < teamSize; i++)
+        {
+            Robot chosenRobot;
+            String code = "";
+            int chosenType = random.nextInt(0,TYPES_OF_ROBOTS);
+            if(chosenType == 0)
+            {
+                code += "S" + numberOfRobots;
+                chosenRobot = new SimpleBot();
+            }
+            else if(chosenType == 1)
+            {
+                code += "P" + numberOfRobots;
+                chosenRobot = new PredatorBot();
+            }
+            else if(chosenType == 2)
+            {
+                code += "D" + numberOfRobots;
+                chosenRobot = new DefenceBot();
+            }
+            else if(chosenType == 3)
+            {
+                code += "X" + numberOfRobots;
+                chosenRobot = new SpeedBot();
+            }
+            else if(chosenType == 4)
+            {
+                code += "K" + numberOfRobots;
+                chosenRobot = new SpreadBot();
+            }
+            else //chosenType == 5
+            {
+                code += "O" + numberOfRobots;
+                chosenRobot = new OneBot();
+            }
+
+            chosenRobot.setName(code);
+            numberOfRobots ++;
+            blue[i] = chosenRobot;
+        }
 
         //sort robots by speed (greater speed value appear first in team’s robot array) 
 
+        //RED
+        for(int i = 0; i < red.length - 1; i++)
+        {
+            for (int j = 0; j < red.length - 1; j++)
+            {
+                if(red[j].getSpeed() < red[j+1].getSpeed())
+                {
+                    Robot temp = red[i];
+                    red[i] = red[j];
+                    red[j] = temp;
+                }
+            }
+        }
 
+        for(int i = 0; i < red.length - 1; i++)
+        {
+            for (int j = 0; j < red.length - 1; j++)
+            {
+                if(red[j].getSpeed() < red[j+1].getSpeed())
+                {
+                    Robot temp = red[i];
+                    red[i] = red[j];
+                    red[j] = temp;
+                }
+            }
+        }
 
     }
 
@@ -32,10 +142,25 @@ public class Simulation
          * Deetermines which team starts first. 
          * To this end, calculates the sum of the speed values of the robots of each team; 
          * the team whose speed sum is higher starts first.
+         * t. If the speed sums are the same, the red team starts first. 
          */
+        double sumOfRed = 0;
+        double sumOfBlue = 0;
+        for(Robot robot: red)
+        {
+            sumOfRed += robot.getSpeed();
+        }
+        for(Robot robot: blue)
+        {
+            sumOfBlue += robot.getSpeed();
+        }
 
-
-
+        Robot[] startingTeam = this.red; //if (sumOfBlue <= sumOfRed)
+        if(sumOfBlue > sumOfRed)
+        {
+            startingTeam = this.blue;
+        }
+        
 
         /*
          * The robots of each team take turns to perform their attack.
@@ -58,6 +183,18 @@ public class Simulation
     public Robot getRandomTarget(boolean isRedTeam)
     {
         Robot target;
+        Random type = new Random();
+        if(isRedTeam)
+        {
+            int targetIndex = type.nextInt(0, red.length);
+            target = red[targetIndex];
+        }
+        else //blue team
+        { 
+            int targetIndex = type.nextInt(0, blue.length);
+            target = blue[targetIndex];
+        }
+        return target;
 
 
     }
@@ -201,9 +338,31 @@ public class Simulation
      */
     Robot[] getLowestSpeed3(boolean isRedTeam)
     {
+        ArrayList<Robot> chosenTeam = new ArrayList<Robot>();
+        if(isRedTeam)
+        {
+            for(Robot robot: red)
+            chosenTeam.add(robot);
+        }
+        else
+        {
+            for(Robot robot: blue)
+            chosenTeam.add(robot);
+        }
 
+        Robot robotWithLowestSpeed1 = getLowestSpeed(chosenTeam);
+        chosenTeam.remove(robotWithLowestSpeed1);
+        Robot robotWithLowestSpeed2 = getLowestSpeed(chosenTeam);
+        chosenTeam.remove(robotWithLowestSpeed2);
+        Robot robotWithLowestSpeed3 = getLowestSpeed(chosenTeam);
+        chosenTeam.remove(robotWithLowestSpeed3);
 
-
+        Robot [] lowestThreeRobots = new Robot[3];
+        lowestThreeRobots[0] = robotWithLowestSpeed1;
+        lowestThreeRobots[1] = robotWithLowestSpeed2;
+        lowestThreeRobots[2] = robotWithLowestSpeed3;
+        
+        return lowestThreeRobots;
     }
 
 
@@ -220,6 +379,22 @@ public class Simulation
             }
         }
 
+    }
+
+    //helper
+    public static Robot getLowestSpeed(ArrayList<Robot> team)
+    {
+        Robot robotWithLowestSpeed;
+
+        robotWithLowestSpeed = team.get(0);
+        for(int i = 1; i < team.size(); i++)
+        {
+            if(team.get(i).getSpeed() < robotWithLowestSpeed.getSpeed())
+            {
+                robotWithLowestSpeed = team.get(i);
+            }
+        }
+        return robotWithLowestSpeed;
     }
 
 

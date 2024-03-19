@@ -47,4 +47,10 @@ public abstract class Robot
     {
         return isRedTeam;
     }
+     
+    //SETTERS
+    public void setName(String s)
+    {
+        this.name = s;
+    }
 }
