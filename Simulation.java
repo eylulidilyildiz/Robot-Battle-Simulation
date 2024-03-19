@@ -10,6 +10,11 @@ public class Simulation
 
     private final int TYPES_OF_ROBOTS = 6;
 
+    public Simulation(int teamSize)
+    {
+        initialize(teamSize);
+    }
+
     /**
      * 
      * @param teamSize
@@ -108,7 +113,6 @@ public class Simulation
         }
 
         //sort robots by speed (greater speed value appear first in team’s robot array) 
-
         //RED
         for(int i = 0; i < red.length - 1; i++)
         {
@@ -138,7 +142,6 @@ public class Simulation
         }
 
         displayTeams();
-
     }
 
 
@@ -156,23 +159,23 @@ public class Simulation
         {
             sumOfRed += robot.getSpeed();
         }
-        System.out.println("Speed sum of Red: " + sumOfRed);
+        System.out.printf("\n\nSpeed sum of Red: %.3f", sumOfRed);
 
         for(Robot robot: blue)
         {
             sumOfBlue += robot.getSpeed();
         }
-        System.out.println("Speed sum of Blue: " + sumOfBlue);
+        System.out.printf("\nSpeed sum of Blue: %.3f", sumOfBlue);
 
         Robot[] startingTeam;
         if(sumOfBlue > sumOfRed)
         {
             startingTeam = this.blue;
-            System.out.println("Blue starts first.");
+            System.out.println("\nBlue starts first.");
         }
         else{  //if (sumOfBlue <= sumOfRed)
             startingTeam = this.red; 
-            System.out.println("Red starts first.");
+            System.out.println("\nRed starts first.");
         }
         
         
@@ -200,15 +203,15 @@ public class Simulation
         System.out.println("\nRed Team:");
         for(Robot redRobot: red)
         {
-            System.out.println(redRobot.getName() + " Health: " + redRobot.getHealth() + " Attack: " + redRobot.getAttack() 
-            + " Speed: " + redRobot.getSpeed());
+            System.out.printf("%s Health: %.3f Attack: %.3f Speed: %.3f\n" , redRobot.getName(), redRobot.getHealth(),
+            redRobot.getAttack(), redRobot.getSpeed());
         }
 
         System.out.println("\nBlue Team:");
         for(Robot blueRobot: blue)
         {
-            System.out.println(blueRobot.getName() + " Health: " + blueRobot.getHealth() + " Attack: " + blueRobot.getAttack() 
-            + " Speed: " + blueRobot.getSpeed());
+            System.out.printf("%s Health: %.3f Attack: %.3f Speed: %.3f\n" , blueRobot.getName(), blueRobot.getHealth(),
+            blueRobot.getAttack(), blueRobot.getSpeed());
         }
     }
 
@@ -389,18 +392,25 @@ public class Simulation
             chosenTeam.add(robot);
         }
 
-        Robot robotWithLowestSpeed1 = getLowestSpeed(chosenTeam);
-        chosenTeam.remove(robotWithLowestSpeed1);
-        Robot robotWithLowestSpeed2 = getLowestSpeed(chosenTeam);
-        chosenTeam.remove(robotWithLowestSpeed2);
-        Robot robotWithLowestSpeed3 = getLowestSpeed(chosenTeam);
-        chosenTeam.remove(robotWithLowestSpeed3);
-
         Robot [] lowestThreeRobots = new Robot[3];
+
+        Robot robotWithLowestSpeed1 = getLowestSpeed(chosenTeam);
         lowestThreeRobots[0] = robotWithLowestSpeed1;
-        lowestThreeRobots[1] = robotWithLowestSpeed2;
-        lowestThreeRobots[2] = robotWithLowestSpeed3;
-        
+        chosenTeam.remove(robotWithLowestSpeed1);
+   
+        if(chosenTeam.size() > 0)
+        {
+            Robot robotWithLowestSpeed2 = getLowestSpeed(chosenTeam);
+            lowestThreeRobots[1] = robotWithLowestSpeed2;
+            chosenTeam.remove(robotWithLowestSpeed2);
+        }
+        if(chosenTeam.size() > 0)
+        {
+            Robot robotWithLowestSpeed3 = getLowestSpeed(chosenTeam);
+            lowestThreeRobots[2] = robotWithLowestSpeed3;
+            chosenTeam.remove(robotWithLowestSpeed3);
+        }
+
         return lowestThreeRobots;
     }
 
