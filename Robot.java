@@ -27,6 +27,12 @@ public abstract class Robot
      */
         public abstract boolean getHitAndIsDestroyed(double damage);
 
+    //helper
+    public void displayRobotInformation()
+    {
+        System.out.printf("%s Health: %.3f Attack: %.3f Speed: %.3f\n" , this.name, this.health, this.attack, this.speed);
+    }
+
     //GETTERS
     public double getHealth()
     {

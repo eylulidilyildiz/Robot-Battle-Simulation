@@ -18,13 +18,36 @@ public class PredatorBot extends Robot
 
     }
 
-    public void attack( Simulation s)
+    public void attack(Simulation s)
     {
+        Robot target;
+        if(this.isRedTeam) //if this PredatorBot is red
+        {
+            target = s.getHighestHealth(!isRedTeam); //chooses target from blue team
+        }
+        else{
+            target = s.getHighestHealth(isRedTeam);
+        }
 
+
+        boolean isTargetDestroyed = target.getHitAndIsDestroyed(this.attack);
+        if(isTargetDestroyed)
+        {
+            s.removeRobot(target);
+        }
     }
 
     public boolean getHitAndIsDestroyed(double damage)
     {
+        if(this.health <= damage)
+        {
+            this.health = 0;
+        }
+        else{
+            this.health -= damage;
+        }
+ 
+        System.out.printf("%s receives %.3f damage -> remaining health: %.3f\n", this.name, damage, this.health);
         return (health <= 0);
     }
     

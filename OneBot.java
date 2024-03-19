@@ -23,8 +23,18 @@ public class OneBot extends Robot
 
     }
 
+
     public boolean getHitAndIsDestroyed(double damage)
     {
+        if(this.health <= damage)
+        {
+            this.health = 0;
+        }
+        else{
+            this.health -= damage;
+        }
+ 
+        System.out.printf("%s receives %.3f damage -> remaining health: %.3f\n", this.name, damage, this.health);
         return (health <= 0);
     }
     

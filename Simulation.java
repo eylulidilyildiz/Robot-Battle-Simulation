@@ -159,7 +159,7 @@ public class Simulation
         {
             sumOfRed += robot.getSpeed();
         }
-        System.out.printf("\n\nSpeed sum of Red: %.3f", sumOfRed);
+        System.out.printf("\nSpeed sum of Red: %.3f", sumOfRed);
 
         for(Robot robot: blue)
         {
@@ -168,13 +168,16 @@ public class Simulation
         System.out.printf("\nSpeed sum of Blue: %.3f", sumOfBlue);
 
         Robot[] startingTeam;
+        Robot[] otherTeam;
         if(sumOfBlue > sumOfRed)
         {
             startingTeam = this.blue;
-            System.out.println("\nBlue starts first.");
+            otherTeam = this.red;
+            System.out.println("\n\nBlue starts first.");
         }
         else{  //if (sumOfBlue <= sumOfRed)
             startingTeam = this.red; 
+            otherTeam = this.blue;
             System.out.println("\nRed starts first.");
         }
         
@@ -188,10 +191,43 @@ public class Simulation
          * 
          * The simulation continues until one of the teams has all of its robots destroyed.
         */
+        int indexOfStartingTeam = 0;
+        int indexOfOtherTeam = 0;
         while(!isSimulationFinished())
         {
+            if(indexOfStartingTeam >= startingTeam.length)
+            {
+                indexOfStartingTeam = 0;
+            }
+            startingTeam[indexOfStartingTeam].attack(this);
+            indexOfStartingTeam ++;
 
+            if(!isSimulationFinished())
+            {
+                if(indexOfOtherTeam >= otherTeam.length)
+                {
+                    indexOfOtherTeam = 0;
+                }
+                otherTeam[indexOfOtherTeam].attack(this);
+                indexOfOtherTeam ++;
+            }
+        }
 
+        if(red.length > 0) //Red wins
+        {
+            System.out.println("Red team wins, remaining robots:");
+            for(Robot remainingRobot: red)
+            {
+                remainingRobot.displayRobotInformation();
+            }
+        }
+        else //Blue wins
+        {
+            System.out.println("Blue team wins, remaining robots:");
+            for(Robot remainingRobot: blue)
+            {
+                remainingRobot.displayRobotInformation();
+            }
         }
 
     }
@@ -203,15 +239,13 @@ public class Simulation
         System.out.println("\nRed Team:");
         for(Robot redRobot: red)
         {
-            System.out.printf("%s Health: %.3f Attack: %.3f Speed: %.3f\n" , redRobot.getName(), redRobot.getHealth(),
-            redRobot.getAttack(), redRobot.getSpeed());
+            redRobot.displayRobotInformation();
         }
 
         System.out.println("\nBlue Team:");
         for(Robot blueRobot: blue)
         {
-            System.out.printf("%s Health: %.3f Attack: %.3f Speed: %.3f\n" , blueRobot.getName(), blueRobot.getHealth(),
-            blueRobot.getAttack(), blueRobot.getSpeed());
+            blueRobot.displayRobotInformation();
         }
     }
 

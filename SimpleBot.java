@@ -30,17 +30,28 @@ public class SimpleBot extends Robot
             target = s.getRandomTarget(isRedTeam); //chooses randomly from the red team
         }
 
+        System.out.println(this.name + " attacks " + target.getName());
         boolean isTargetDestroyed = target.getHitAndIsDestroyed(this.attack);
         if(isTargetDestroyed)
         {
+            System.out.println(target.getName() + " destroyed.");
             s.removeRobot(target);
+
         }
 
     }
 
     public boolean getHitAndIsDestroyed(double damage)
     {
-        this.health -= damage;
+        if(this.health <= damage)
+        {
+            this.health = 0;
+        }
+        else{
+            this.health -= damage;
+        }
+ 
+        System.out.printf("%s receives %.3f damage -> remaining health: %.3f\n", this.name, damage, this.health);
         return (health <= 0);
     }
     
