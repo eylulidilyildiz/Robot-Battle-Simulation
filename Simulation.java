@@ -464,7 +464,25 @@ public class Simulation
 
     public void removeRobot(Robot r)
     {
+
+        boolean targetIsFromStarting = isFromStartingTeam(r);
         int indexOfTarget = findIndexOfTarget(r);
+        if(isFromStartingTeam(r))
+        {
+            if(indexOfTarget < indexOfStartingTeam)
+            {
+                indexOfStartingTeam --;
+            }
+        }
+        else
+        {  
+            if(indexOfTarget < indexOfOtherTeam)
+            {
+                indexOfOtherTeam --;
+            }
+        }
+
+
         if(r.isRedTeam())
         {
             for(int i = 0; i < red.length; i++)
@@ -498,21 +516,25 @@ public class Simulation
             blue = Arrays.copyOf(blue, blue.length -1);
         }
 
-        if(isFromStartingTeam(r))
-        { 
-            if(indexOfTarget <= indexOfStartingTeam)
-            {
-                indexOfStartingTeam --;
-            }
-        }
-        else
+        if(targetIsFromStarting == true)
         {
-            if(indexOfTarget <= indexOfOtherTeam)
+            if(r.isRedTeam())
             {
-                indexOfOtherTeam --;
+                startingTeam = red;
+            }
+            else{
+                startingTeam = blue;
             }
         }
-
+        else{
+            if(r.isRedTeam())
+            {
+                otherTeam = red;
+            }
+            else{
+                otherTeam = blue;
+            }
+        }
 
     }
 
