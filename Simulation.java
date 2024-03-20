@@ -8,8 +8,11 @@ public class Simulation
     private Robot [] blue;
     private int numberOfRobots;
 
-    private int indexOfStartingTeam = 0;
-    private int indexOfOtherTeam = 0;
+    private Robot[] startingTeam;
+    private Robot[] otherTeam;
+
+    private int indexOfStartingTeam;
+    private int indexOfOtherTeam;
 
     private final int TYPES_OF_ROBOTS = 6;
 
@@ -25,6 +28,7 @@ public class Simulation
     public void initialize(int teamSize)
     {
         numberOfRobots = 0;
+
         this.red = new Robot [teamSize];
         this.blue = new Robot[teamSize];
 
@@ -123,27 +127,26 @@ public class Simulation
             {
                 if(red[j].getSpeed() < red[j+1].getSpeed())
                 {
-                    Robot temp = red[i];
-                    red[i] = red[j];
-                    red[j] = temp;
+                    Robot temp = red[j];
+                    red[j] = red[j+1];
+                    red[j+1] = temp;
                 }
             }
         }
 
         //BLUE
-        for(int i = 0; i < red.length - 1; i++)
+        for(int i = 0; i < blue.length - 1; i++)
         {
-            for (int j = 0; j < red.length - 1; j++)
+            for (int j = 0; j < blue.length - 1; j++)
             {
-                if(red[j].getSpeed() < red[j+1].getSpeed())
+                if(blue[j].getSpeed() < blue[j+1].getSpeed())
                 {
-                    Robot temp = red[i];
-                    red[i] = red[j];
-                    red[j] = temp;
+                    Robot temp = blue[j];
+                    blue[j] = blue[j+1];
+                    blue[j+1] = temp;
                 }
             }
         }
-
         displayTeams();
     }
 
@@ -170,8 +173,6 @@ public class Simulation
         }
         System.out.printf("\nSpeed sum of Blue: %.3f", sumOfBlue);
 
-        Robot[] startingTeam;
-        Robot[] otherTeam;
         if(sumOfBlue > sumOfRed)
         {
             startingTeam = this.blue;
@@ -185,7 +186,6 @@ public class Simulation
         }
         
         
-
         /*
          * The robots of each team take turns to perform their attack.
          * Robots can be destroyed when attacked by the opposite team’s robots. 
@@ -194,40 +194,28 @@ public class Simulation
          * 
          * The simulation continues until one of the teams has all of its robots destroyed.
         */
-        int indexOfStartingTeam = 0;
-        int indexOfOtherTeam = 0;
+        indexOfStartingTeam = 0;
+        indexOfOtherTeam = 0;
         while(!isSimulationFinished())
         {
-            if(indexOfStartingTeam >= startingTeam.length || indexOfStartingTeam < 0)
+            if((indexOfStartingTeam >= startingTeam.length) || (indexOfStartingTeam < 0))
             {
                 indexOfStartingTeam = 0;
             }
 
-            int previousLengthOfOther = otherTeam.length;
-
             startingTeam[indexOfStartingTeam].attack(this);
             indexOfStartingTeam ++; 
-            if(otherTeam.length == previousLengthOfOther)
-            {
-                indexOfOtherTeam --;
-            }
 
 
             if(!isSimulationFinished())
             {
-                if(indexOfOtherTeam >= otherTeam.length || indexOfOtherTeam < 0)
+                if((indexOfOtherTeam >= otherTeam.length) || (indexOfOtherTeam < 0))
                 {
                     indexOfOtherTeam = 0;
                 }
-
-                int previousLengthOfStarting = startingTeam.length;
                 
                 otherTeam[indexOfOtherTeam].attack(this);
                 indexOfOtherTeam ++; 
-                if(startingTeam.length == previousLengthOfStarting)
-                {
-                    indexOfStartingTeam --; 
-                }
                 
             }
         }
@@ -476,6 +464,7 @@ public class Simulation
 
     public void removeRobot(Robot r)
     {
+        int indexOfTarget = findIndexOfTarget(r);
         if(r.isRedTeam())
         {
             for(int i = 0; i < red.length; i++)
@@ -507,8 +496,23 @@ public class Simulation
 
             }
             blue = Arrays.copyOf(blue, blue.length -1);
-
         }
+
+        if(isFromStartingTeam(r))
+        { 
+            if(indexOfTarget <= indexOfStartingTeam)
+            {
+                indexOfStartingTeam --;
+            }
+        }
+        else
+        {
+            if(indexOfTarget <= indexOfOtherTeam)
+            {
+                indexOfOtherTeam --;
+            }
+        }
+
 
     }
 
@@ -558,6 +562,26 @@ public class Simulation
             }
         }
         return index;
+    }
+
+
+    public boolean isFromStartingTeam(Robot r)
+    {
+        if(startingTeam == red)
+        {
+            if(r.isRedTeam())
+            {
+                return true;
+            }
+        }
+        if(startingTeam == blue)
+        {
+            if(!r.isRedTeam())
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
 

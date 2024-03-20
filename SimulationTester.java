@@ -10,14 +10,14 @@ public class SimulationTester {
         {
             if(!input.hasNextInt())
             {
-                System.out.print("Team size should be an integer!\nTeam Size:");
+                System.out.print("Team size should be an integer!\nTeam Size: ");
                 input = new Scanner(System.in);
             }
             else{
                 teamSize = input.nextInt();
                 if(teamSize <= 0)
                 {
-                    System.out.print("Team size should be positive!\nTeam Size:");
+                    System.out.print("Team size should be positive!\nTeam Size: ");
                     input = new Scanner(System.in);
                 }
                 else{
